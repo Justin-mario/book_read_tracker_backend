@@ -1,8 +1,8 @@
 package com.book.read.tracker.service.progress;
 
 import com.book.read.tracker.data.bookenum.STATUS;
+import com.book.read.tracker.data.dao.ReadingProgressDao;
 import com.book.read.tracker.data.entity.Book;
-import com.book.read.tracker.data.entity.ReadingProgress;
 import com.book.read.tracker.exception.BookException;
 import com.book.read.tracker.repository.ReadingProgressRepository;
 import com.book.read.tracker.utility.Utility;
@@ -22,46 +22,40 @@ public class ReadingProgressServiceImpl implements ReadingProgressService{
        this.utility = utility;
     }
 
-//    @Override
-//    public boolean isFinished(Long bookId) {
-//        Book book = utility.getBookById ( bookId );
-//        boolean isFinished = book.getReadingProgress ().isFinished ();
-//        if ()
-//        book.getReadingProgress ().setFinished ( !isFinished );
-//        progressRepository.save ( book.getReadingProgress () );
-//        return book.getReadingProgress ().isFinished ();
-//    }
-
 
     @Override
-    public String setDaily_weeklyReadingTarget(Long bookId, Integer target) {
+    public String setDaily_weeklyReadingTarget(Long bookId, ReadingProgressDao target) {
         Book book = utility.getBookById ( bookId );
-        validateInput ( target );
-            book.getReadingProgress ().setSetNumberOfPageToReadTarget ( target );
+        validateInput ( target.getSetNumberOfPageToReadTarget () );
+            book.getReadingProgress ().setSetNumberOfPageToReadTarget (  target.getSetNumberOfPageToReadTarget () );
             progressRepository.save ( book.getReadingProgress () );
         return "success";
     }
 
+
     @Override
-    public String setCurrentPage(Long bookId, Integer currentPage){
+    public String setCurrentPage(Long bookId, ReadingProgressDao currentPage){
         Book book = utility.getBookById ( bookId );
-        validateInput ( currentPage );
-        book.getReadingProgress ().setCurrentPage ( currentPage );
+        validateInput ( currentPage.getCurrentPage () );
+        book.getReadingProgress ().setCurrentPage ( currentPage.getCurrentPage () );
         progressRepository.save ( book.getReadingProgress () );
         return "success";
     }
 
     @Override
-    public String setReadStatus(Long bookId, String status){
+    public String setReadStatus(Long bookId, ReadingProgressDao status){
         Book book = utility.getBookById ( bookId );
-        if (status.equals ( "FINISHED" )){
+        if(status.getStatus () == null){
+            throw new NullPointerException ( "status can not be null" );
+        }
+        if (status.getStatus ().equals ( "FINISHED" )){
             book.getReadingProgress ().setFinished ( true );
-            book.getReadingProgress ().setStatus ( STATUS.valueOf ( status ) );
-        }else if(status.equals ( "YET_TO_READ")){
+            book.getReadingProgress ().setStatus ( STATUS.valueOf ( status.getStatus () ) );
+        }else if(status.getStatus ().equals ( "YET_TO_READ")){
             book.getReadingProgress ().setFinished ( false );
-            book.getReadingProgress ().setStatus ( STATUS.valueOf ( status ) );
+            book.getReadingProgress ().setStatus ( STATUS.valueOf ( status.getStatus () ) );
         }else {
-            book.getReadingProgress ().setStatus ( STATUS.valueOf ( status ) );
+            book.getReadingProgress ().setStatus ( STATUS.valueOf (  status.getStatus () ) );
         }
         progressRepository.save ( book.getReadingProgress () );
         return "success";
