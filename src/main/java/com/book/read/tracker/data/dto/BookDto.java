@@ -32,6 +32,8 @@ public class BookDto {
 
     private String readingNote;
 
+    private int rating;
+
     public BookDto(Book book){
         id = book.getId ();
         title = book.getTitle ();
@@ -42,5 +44,6 @@ public class BookDto {
         status = book.getReadingProgress ().getStatus ();
         review = book.getBookReview ().getReview ();
         readingNote = book.getBookReview ().getReadingNote ();
+        rating = book.getBookRating ().getRateBook ();
     }
 }

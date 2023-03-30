@@ -49,8 +49,13 @@ public class ReadingProgressServiceImpl implements ReadingProgressService{
             throw new NullPointerException ( "status can not be null" );
         }
         if (status.getStatus ().equals ( "FINISHED" )){
-            book.getReadingProgress ().setFinished ( true );
-            book.getReadingProgress ().setStatus ( STATUS.valueOf ( status.getStatus () ) );
+            if (book.getReadingProgress ().getStatus ().equals ( STATUS.YET_TO_READ )) {
+                throw new BookException ( "when did you start to read this book? because you are yet to set the status to 'IN_PROGRESS'" );
+            }else {
+                book.getReadingProgress ().setFinished ( true );
+                book.getReadingProgress ().setStatus ( STATUS.valueOf ( status.getStatus () ) );
+            }
+
         }else if(status.getStatus ().equals ( "YET_TO_READ")){
             book.getReadingProgress ().setFinished ( false );
             book.getReadingProgress ().setStatus ( STATUS.valueOf ( status.getStatus () ) );
