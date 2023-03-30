@@ -12,9 +12,14 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BookDao {
     private Long id;
+
     private String author;
 
     private String title;
+
+    private String month;
+
+    private String year;
 
     public BookDao(Book book) {
         id = book.getId ();

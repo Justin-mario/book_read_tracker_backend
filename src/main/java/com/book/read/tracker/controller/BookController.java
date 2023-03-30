@@ -60,5 +60,20 @@ public class BookController {
         return new ResponseEntity<> ( bookService.deleteAllBooks (), HttpStatus.OK );
     }
 
+    @GetMapping("/read")
+    public ResponseEntity<?> getAllReadBooks(){
+        return new ResponseEntity<> ( bookService.getAllReadBooks (), HttpStatus.OK );
+    }
+
+    @GetMapping("/yet-to-read")
+    public ResponseEntity<?> getAllYetToRead(){
+        return new ResponseEntity<> ( bookService.getAllYetToReadBooks (), HttpStatus.OK );
+    }
+
+    @GetMapping("/in-progress")
+    public ResponseEntity<?> getInProgressBooks(){
+        return new ResponseEntity<> ( bookService.getAllInProcessBook (), HttpStatus.OK );
+    }
+
 
 }

@@ -18,4 +18,7 @@ public interface BookService {
     Map<String, String> deleteBookByTitle(String title);
     Map<String, String> deleteAllBooksByAuthor(String author);
     Map<String, String> deleteAllBooks();
+    List<BookDto> getAllReadBooks();
+    List<BookDto> getAllYetToReadBooks();
+    List<BookDto> getAllInProcessBook();
 }

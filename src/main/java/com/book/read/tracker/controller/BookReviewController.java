@@ -1,4 +1,4 @@
-package com.book.read.tracker;
+package com.book.read.tracker.controller;
 
 import com.book.read.tracker.data.dao.BookReviewDao;
 import com.book.read.tracker.service.review.BookReviewService;

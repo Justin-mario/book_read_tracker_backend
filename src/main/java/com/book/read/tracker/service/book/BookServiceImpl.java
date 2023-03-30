@@ -1,13 +1,16 @@
 package com.book.read.tracker.service.book;
 
+import com.book.read.tracker.data.bookenum.STATUS;
 import com.book.read.tracker.data.dao.BookDao;
 import com.book.read.tracker.data.dto.BookDto;
 import com.book.read.tracker.data.entity.Book;
+import com.book.read.tracker.data.entity.BookRating;
 import com.book.read.tracker.data.entity.BookReview;
 import com.book.read.tracker.data.entity.ReadingProgress;
 import com.book.read.tracker.exception.BookException;
 import com.book.read.tracker.exception.BookExistException;
 import com.book.read.tracker.exception.BookNotFoundException;
+import com.book.read.tracker.repository.BookRatingRepository;
 import com.book.read.tracker.repository.BookRepository;
 import com.book.read.tracker.repository.BookReviewRepository;
 import com.book.read.tracker.repository.ReadingProgressRepository;
@@ -33,6 +36,8 @@ public class BookServiceImpl implements BookService {
 
     private final BookReviewRepository bookReviewRepository;
 
+    private final BookRatingRepository bookRatingRepository;
+
     private final Utility utility;
 
     @Transactional
@@ -46,9 +51,13 @@ public class BookServiceImpl implements BookService {
         BookReview bookReview = new BookReview ();
         bookReview.setBook ( book );
         book.setBookReview ( bookReview );
+        BookRating bookRating = new BookRating ();
+        bookRating.setBook ( book );
+        book.setBookRating ( bookRating );
         progressRepository.save ( readingProgress );
         bookRepository.save ( book );
         bookReviewRepository.save ( bookReview );
+        bookRatingRepository.save ( bookRating );
         return new BookDto (book);
     }
 
@@ -102,6 +111,24 @@ public class BookServiceImpl implements BookService {
         Map<String, String> status = new HashMap<> ();
         status.put ( "Success", "All books  has been deleted");
         return status;
+    }
+
+    @Override
+    public List<BookDto> getAllReadBooks() {
+        List<Book> allBooksRead = bookRepository.findBooksByReadingProgress_Status ( STATUS.FINISHED );
+        return allBooksRead.stream ().map ( BookDto::new ).toList ();
+    }
+
+    @Override
+    public List<BookDto> getAllYetToReadBooks() {
+        List<Book> allYetToReadBooks = bookRepository.findBooksByReadingProgress_Status ( STATUS.YET_TO_READ );
+        return allYetToReadBooks.stream ().map ( BookDto::new ).toList ();
+    }
+
+    @Override
+    public List<BookDto> getAllInProcessBook() {
+        List<Book> allYetToReadBooks = bookRepository.findBooksByReadingProgress_Status ( STATUS.IN_PROGRESS );
+        return allYetToReadBooks.stream ().map ( BookDto::new ).toList ();
     }
 
     private Book bookExistByTitle(String title){
