@@ -22,7 +22,7 @@ public class BookReview {
 
     private String readingNote;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Book book;
 
 

@@ -20,7 +20,7 @@ public class BookRating {
 
     private int rateBook = 0;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Book book;
 
     public BookRating(BookRatingDao bookRatingDao){

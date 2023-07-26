@@ -26,6 +26,6 @@ public class ReadingProgress {
     @Enumerated(value = EnumType.STRING)
     private STATUS status = STATUS.YET_TO_READ;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Book book;
 }
