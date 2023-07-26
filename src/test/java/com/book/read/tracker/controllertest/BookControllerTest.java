@@ -7,6 +7,7 @@ import com.book.read.tracker.data.entity.ReadingProgress;
 import com.book.read.tracker.repository.BookRepository;
 import com.book.read.tracker.repository.ReadingProgressRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -34,14 +36,9 @@ class BookControllerTest {
 
     private MockMvc mockMvc;
 
-    @MockBean
-    private BookRepository bookRepository;
-
-    @MockBean
-    ReadingProgressRepository progressRepository;
-
     @Autowired
     private ObjectMapper objectMapper;
+
 
 
     @BeforeEach
@@ -53,19 +50,17 @@ class BookControllerTest {
     @Test
     void testAddBook() throws Exception {
         BookDao firstBook = new BookDao ();
-        firstBook.setAuthor ( "J R R Tolkien" );
-        firstBook.setTitle ( "Lord Of The Rings" );
-        Book book = new Book(firstBook);
-
-        when(bookRepository.save(book)).thenReturn(book);
+        firstBook.setAuthor ( "Sam Walton" );
+        firstBook.setTitle ( "Made in America" );
 
 
-        mockMvc.perform( MockMvcRequestBuilders.post("/")
+
+        mockMvc.perform( MockMvcRequestBuilders.post("/api/v1/book")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(book)))
-                .andExpect(MockMvcResultMatchers.status().isOk ())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title", is(book.getTitle())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.author", is(book.getAuthor())));
+                        .content(objectMapper.writeValueAsString(firstBook)))
+                .andExpect(MockMvcResultMatchers.status().isCreated ())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title", is("Made in America".toUpperCase ())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.author", is("Sam Walton".toUpperCase ())));
 
 
     }
